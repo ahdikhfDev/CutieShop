@@ -100,9 +100,7 @@
 <script>
     const modal = document.getElementById('detailModal');
     
-    // Kita pakai Event Delegation biar tombol di Desktop & Mobile jalan semua
     document.addEventListener('click', function(e) {
-        // Cek jika yang diklik adalah tombol detail atau anaknya (icon mata)
         const btn = e.target.closest('.btn-detail');
         if (btn) {
             const url = btn.getAttribute('data-url');

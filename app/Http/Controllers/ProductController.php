@@ -73,7 +73,6 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = Product::find($id);
-        // Kita kirim response berupa JSON
         return response()->json($product);
     }
 

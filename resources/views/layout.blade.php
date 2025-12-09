@@ -38,11 +38,6 @@
                 e.preventDefault();
                 const formId = this.getAttribute('data-id');
                 const form = document.getElementById(`delete-form-${formId}`);
-                // Atau jika di index page tombol deletenya membungkus form, sesuaikan selektornya.
-                // Tapi cara paling aman untuk index & show adalah menggunakan form terpisah atau submit closest form.
-                
-                // Di Index page kamu sebelumnya, tombol delete ada di dalam form langsung. 
-                // Jadi kita modifikasi sedikit logicnya agar universal:
                 const parentForm = this.closest('form'); 
 
                 Swal.fire({
@@ -50,18 +45,16 @@
                     text: "Data yang dihapus nggak bisa balik lagi lho!",
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#f472b6', // Warna Pink Tailwind (pink-400)
-                    cancelButtonColor: '#d1d5db', // Warna Abu
+                    confirmButtonColor: '#f472b6', 
+                    cancelButtonColor: '#d1d5db', 
                     confirmButtonText: 'Ya, Hapus Aja!',
                     cancelButtonText: 'Gak Jadi',
-                    background: '#fff1f2', // Latar belakang pink sangat muda
-                    color: '#be185d', // Teks warna pink tua
+                    background: '#fff1f2', 
+                    color: '#be185d', 
                     borderRadius: '20px'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Submit formnya
                         if(parentForm) parentForm.submit(); 
-                        // Khusus halaman Show yang formnya pake ID terpisah:
                         else if(form) form.submit();
                     }
                 })
