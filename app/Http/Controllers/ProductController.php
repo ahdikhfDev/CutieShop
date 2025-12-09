@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use App\Exports\ProductsExport;
+use App\Imports\ProductsImport;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProductController extends Controller
 {
@@ -14,11 +18,13 @@ class ProductController extends Controller
         return view('products.index', compact('products'));
     }
 
+    // CREATE
     public function create()
     {
         return view('products.create');
     }
 
+    // SAVE
     public function store(Request $request)
     {
         $request->validate([
@@ -39,11 +45,13 @@ class ProductController extends Controller
         return redirect()->route('products.index')->with('success', 'Barang lucu berhasil ditambah! 🌸');
     }
 
+    // EDIT
     public function edit(Product $product)
     {
         return view('products.edit', compact('product'));
     }
 
+    // UPDATE
     public function update(Request $request, Product $product)
     {
         $request->validate([
@@ -74,6 +82,7 @@ class ProductController extends Controller
         return response()->json($product);
     }
 
+    // DELETE
     public function destroy(Product $product)
     {
         if(File::exists(public_path('images/'.$product->image))){
@@ -81,5 +90,32 @@ class ProductController extends Controller
         }
         $product->delete();
         return redirect()->route('products.index')->with('success', 'Barang berhasil dihapus 👋');
+    }
+
+    // EXPORT EXCEL
+    public function exportExcel()
+    {
+        return Excel::download(new ProductsExport, 'laporan-produk.xlsx');
+    }
+
+    // IMPORT EXCEL
+    public function importExcel(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls'
+        ]);
+
+        Excel::import(new ProductsImport, $request->file('file'));
+
+        return redirect()->route('products.index')->with('success', 'Data berhasil diimport ke System!');
+    }
+
+    // EXPORT PDF
+    public function exportPdf()
+    {
+        $products = Product::all();
+        $pdf = Pdf::loadView('products.pdf', compact('products'));
+        
+        return $pdf->download('laporan-produk.pdf');
     }
 }
