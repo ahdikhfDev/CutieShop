@@ -31,7 +31,6 @@ class ProductController extends Controller
 
         if ($request->hasFile('image')) {
             $imageName = time().'.'.$request->image->extension();  
-            // Pindahkan gambar ke folder public/images
             $request->image->move(public_path('images'), $imageName);
             $input['image'] = $imageName;
         }
@@ -55,7 +54,6 @@ class ProductController extends Controller
         $input = $request->all();
 
         if ($request->hasFile('image')) {
-            // Hapus gambar lama jika ada
             if(File::exists(public_path('images/'.$product->image))){
                 File::delete(public_path('images/'.$product->image));
             }
